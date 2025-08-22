@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Loan Predictor</title>
+</head>
+<body>
+  <h1>Loan Eligibility Predictor</h1>
+  <form id="loanForm">
+    Applicant Income: <input type="number" name="ApplicantIncome"><br>
+    Coapplicant Income: <input type="number" name="CoapplicantIncome"><br>
+    Loan Amount: <input type="number" name="LoanAmount"><br>
+    Credit History: <select name="Credit_History">
+      <option value="1">Good</option>
+      <option value="0">Bad</option>
+    </select><br>
+    <button type="submit">Predict</button>
+  </form>
+  <div id="result"></div>
+  <script>
+    document.getElementById('loanForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = [Object.fromEntries(new FormData(e.target).entries())];
+      const res = await fetch('http://localhost:8000/predict', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+      });
+      const out = await res.json();
+      document.getElementById('result').innerText = JSON.stringify(out, null, 2);
+    });
+  </script>
+</body>
+</html>
